@@ -1,13 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { fetchAllProducts } from '../store/productsSlice';
+import { fetchAllProducts, selectFilteredProducts } from '../store/productsSlice';
 import ProductCard from './ProductCart';
 import { RootState, AppDispatch } from '../store';
 import SearchBar from './SearchBar';
 
 const ProductList = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { products, searchQuery, status } = useSelector((state: RootState) => state.products) as {
+  const { searchQuery, status } = useSelector((state: RootState) => state.products) as {
     products: { id: number; title: string; price: number; image: string; rating: { rate: number; count: number } }[];
     searchQuery: string;
     status: string;
@@ -18,13 +18,10 @@ const ProductList = () => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
 
-  console.log('Products:', products);
   console.log('Search Query:', searchQuery);
   console.log('Status:', status);
 
-  const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProducts = useSelector(selectFilteredProducts);
 
   console.log('Filtered Products:', filteredProducts);
 
